@@ -1,0 +1,1 @@
+Using an enum to determine the swipe direction is not completely efficent, I've done so because its easier to debug and it's easier to read

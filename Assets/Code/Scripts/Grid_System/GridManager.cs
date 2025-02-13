@@ -10,7 +10,10 @@ namespace Grid_System
         [SerializeField, Min(1)] private Vector2Int _plateGridSize = Vector2Int.one * 4;
         [SerializeField, Min(0)] private float _cellSize = 1;
 
+        public PlateGrid PlateGrid => _plateGrid;
         private PlateGrid _plateGrid;
+
+        public PlateGridController Controller => _gridController;
         private PlateGridController _gridController;
 
         private void Awake()
@@ -20,10 +23,30 @@ namespace Grid_System
             _gridController = new PlateGridController(_plateGrid);
         }
 
-        //Raycast with filter
-        //Get Colliding Object
-        //Convert hit position from global to grid
-        //Move selected object
+        private void Start()
+        {
+            //Get All inredients
+            Ingredient[] ingredients = FindObjectsByType<Ingredient>(sortMode: FindObjectsSortMode.None);
+            foreach(Ingredient ingredient in ingredients)
+            {
+                //Add ingredient to cell
+                Vector2Int positionIngrid = GlobalToGrid(ingredient.transform.position);
+                _plateGrid.Cells[positionIngrid.x, positionIngrid.y].Ingredients.Add(ingredient);
+            }
+        }
+
+        public Vector2Int GlobalToGrid(Vector3 globalPos)
+        {
+            //Convert from global according to cell size
+            int x = Mathf.FloorToInt(globalPos.x / _cellSize);
+            int y = Mathf.FloorToInt(globalPos.z / _cellSize);
+
+            //Clamp value
+            x = Mathf.Clamp(x, 0, _plateGridSize.x);
+            y = Mathf.Clamp(y, 0, _plateGridSize.y);
+            
+            return new Vector2Int(x, y);
+        }
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -37,10 +60,10 @@ namespace Grid_System
             //Draw Grid
             for (int x=0; x < _plateGridSize.x; x++)
             {
-                for(int y=0; y< _plateGridSize.y; y++)
+                for(int y=0; y <  _plateGridSize.y; y++)
                 {
                     //Update cell position
-                    cellPos = new Vector3(x, 0f, y);
+                    cellPos = new Vector3(x * _cellSize, 0f, y * _cellSize);
                     //Draw
                     Gizmos.DrawWireCube(cellPos + cellOffset, cellSize);
                 }

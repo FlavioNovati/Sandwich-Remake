@@ -618,6 +618,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ingredient_Bread
       objectReference: {fileID: 0}
+    - target: {fileID: 6275317612206902617, guid: 9733c88900ec63e4d8f5bb593841d0c2, type: 3}
+      propertyPath: _name
+      value: Bread
+      objectReference: {fileID: 0}
+    - target: {fileID: 6275317612206902617, guid: 9733c88900ec63e4d8f5bb593841d0c2, type: 3}
+      propertyPath: _isBread
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7406513213317551722, guid: 9733c88900ec63e4d8f5bb593841d0c2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

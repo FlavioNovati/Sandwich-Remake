@@ -20,5 +20,17 @@ namespace Grid_System
             _gridPos = new Vector2Int(x, y);
             _ingredients = new List<Ingredient>();
         }
+
+        public override string ToString()
+        {
+            string value = string.Empty;
+            value += $"Position: {GridPos}\n";
+
+            value += $"Ingredients:\n";
+            foreach (Ingredient ingredient in _ingredients)
+                value += $"-\t{ingredient.Name}\n";
+
+            return value;
+        }
     }
 }

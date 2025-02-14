@@ -4,13 +4,14 @@ using UnityEngine;
 
 using Input_System;
 using Input_System.Extentions;
+using System.IO.Pipes;
 
 namespace Grid_System
 {
     public class PlateGridController
     {
         public delegate void PlateCallback(PlateCell cell, SwipeDirection direction);
-        public event PlateCallback PlateCellMovedCallback;
+        public event PlateCallback OnPlateCellMovedCallback;
 
         private PlateGrid _plateGrid;
         public PlateGridController(PlateGrid plateGrid)
@@ -18,7 +19,7 @@ namespace Grid_System
             _plateGrid = plateGrid;
         }
 
-        public void MoveIngredients(Vector2Int coordinate, SwipeDirection swipeDirection)
+        public void MoveCell(Vector2Int coordinate, SwipeDirection swipeDirection)
         {
             //Check if the direction is allowed
             if (swipeDirection == SwipeDirection.INVALID)
@@ -40,17 +41,35 @@ namespace Grid_System
             ingredientsToMove.Reverse();
 
             //Move Ingredients
-            for (int i = 0; i < ingredientsToMove.Count; i++)
-            {
-                Ingredient ingredient = ingredientsToMove[i];
+            MoveIngredients(ingredientsToMove, cellToMove, neighbour, swipeDirection);
 
-                //Get Positions
-                Vector3 neighbourPos = neighbour.Ingredients[^1].transform.position;
-                Vector3 neighbourExtends = neighbour.Ingredients[^1].Extends;
+            //Invoke Callback
+            OnPlateCellMovedCallback?.Invoke(cellToMove, swipeDirection);
+        }
+
+        public void UndoMovement(List<Ingredient> ingredients, Vector2Int coordinate, SwipeDirection swipeDirection)
+        {
+            PlateCell startCell = _plateGrid.GetNeighbour(coordinate, swipeDirection.Reverse()); 
+            PlateCell endCell = _plateGrid.GetCell(coordinate);
+
+            //Move Ingredients
+            MoveIngredients(ingredients, startCell, endCell, swipeDirection.Reverse());
+        }
+
+        private void MoveIngredients(List<Ingredient> ingredients, PlateCell startCell, PlateCell finalCell, SwipeDirection swipeDirection)
+        {
+            //Move Ingredients
+            for (int i = 0; i < ingredients.Count; i++)
+            {
+                Ingredient ingredient = ingredients[i];
+                
+                Vector3 neighbourPos = finalCell.Ingredients[^1].transform.position;
+                Vector3 neighbourExtends = finalCell.Ingredients[^1].Extends;
 
                 //Get Final position
                 Vector3 finalPosition = neighbourPos;
-                finalPosition.y += (neighbourExtends.y/2f) + (ingredientsToMove[i].Extends.y/2f);
+                //Adjust height
+                finalPosition.y += (neighbourExtends.y / 2f) + (ingredient.Extends.y / 2f);
 
                 //Update position
                 ingredient.transform.position = finalPosition;
@@ -60,20 +79,12 @@ namespace Grid_System
                 ingredient.transform.eulerAngles = rotationAngles;
 
                 //Add ingredients
-                neighbour.Ingredients.Add(ingredient);
+                finalCell.Ingredients.Add(ingredient);
             }
 
-            //Empty old Cell
-            cellToMove.Ingredients.Clear();
-
-            //Invoke Callback
-            PlateCellMovedCallback?.Invoke(cellToMove, swipeDirection);
-        }
-
-
-        public void UndoCellMove(PlateCell originalCell, SwipeDirection swipeDirection)
-        {
-
+            //Remove ingredients
+            foreach(Ingredient ingredient in finalCell.Ingredients)
+                startCell.Ingredients.Remove(ingredient);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Grid_System
             
             return new Vector2Int(x, y);
         }
-        s
+        
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 
-using Input_System;
 using Grid_System;
+using Input_System;
 using Record_System;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,9 +16,12 @@ public class GameManager : MonoBehaviour
     private Vector2Int _selectedCell;
     private Camera _cameraRef;
 
+    [SerializeField] private Button back;
+
     private void Awake()
     {
         _recordController = new RecordController();
+        back.onClick.AddListener(UndoMove);
     }
 
     private void Start()
@@ -28,14 +32,16 @@ public class GameManager : MonoBehaviour
         _inputHandler.OnSwipeCallback += Swipe;
 
         //Connect GridManager Controller Callback to recordController
-        _gridManager.Controller.PlateCellMovedCallback += _recordController.AddEntry;
+        _gridManager.Controller.OnPlateCellMovedCallback += _recordController.AddEntry;
 
+        //Get Main Camera
         _cameraRef = Camera.main;
     }
 
     private void OnDestroy()
     {
         _inputHandler.OnSwipeCallback -= Swipe;
+        _gridManager.Controller.OnPlateCellMovedCallback -= _recordController.AddEntry;
     }
 
     private void GetTouchPosition(Vector2 touchPos)
@@ -58,18 +64,18 @@ public class GameManager : MonoBehaviour
     private void Swipe(SwipeDirection swipeDirection)
     {
         //Move Ingredients
-        _gridManager.Controller.MoveIngredients(_selectedCell, swipeDirection);
+        _gridManager.Controller.MoveCell(_selectedCell, swipeDirection);
 
         //TODO: add Constraints -> WARNING -> Go back from one
         //Bread on bread
-
-
-
     }
 
     private void UndoMove()
     {
+        if (_recordController.RecordStack.Count <= 0)
+            return;
+
         RecordEntry recordEntry = _recordController.RecordStack.Pop();
-        _gridManager.Controller.UndoCellMove(recordEntry.PlateCell, recordEntry.SwipeDirection);
+        _gridManager.Controller.UndoMovement(recordEntry.Ingredients, recordEntry.PositionInGrid, recordEntry.SwipeDirection);
     }
 }

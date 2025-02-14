@@ -3,18 +3,21 @@ using UnityEngine;
 
 using Input_System;
 using Grid_System;
+using Record_System;
 
 public class GameManager : MonoBehaviour
 {
     private GridManager _gridManager;
     private InputHandler _inputHandler;
 
+    private RecordController _recordController;
+
     private Vector2Int _selectedCell;
     private Camera _cameraRef;
 
     private void Awake()
     {
-        
+        _recordController = new RecordController();
     }
 
     private void Start()
@@ -23,6 +26,9 @@ public class GameManager : MonoBehaviour
         _inputHandler = FindFirstObjectByType<InputHandler>();
         _inputHandler.OnTouchDownCallback += GetTouchPosition;
         _inputHandler.OnSwipeCallback += Swipe;
+
+        //Connect GridManager Controller Callback to recordController
+        _gridManager.Controller.PlateCellMovedCallback += _recordController.AddEntry;
 
         _cameraRef = Camera.main;
     }
@@ -46,8 +52,6 @@ public class GameManager : MonoBehaviour
         {
             //Get grid cell position
             _selectedCell = _gridManager.GlobalToGrid(hitInfo.collider.transform.position);
-
-            Debug.Log(_selectedCell);
         }
     }
 
@@ -59,7 +63,13 @@ public class GameManager : MonoBehaviour
         //TODO: add Constraints -> WARNING -> Go back from one
         //Bread on bread
 
-        //Cell.Ingredients.Reverse();
-        //Invoke PlateCellMovedCallback
+
+
+    }
+
+    private void UndoMove()
+    {
+        RecordEntry recordEntry = _recordController.RecordStack.Pop();
+        _gridManager.Controller.UndoCellMove(recordEntry.PlateCell, recordEntry.SwipeDirection);
     }
 }

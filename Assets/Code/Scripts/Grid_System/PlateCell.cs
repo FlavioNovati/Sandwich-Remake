@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Grid_System
 {
-    public struct PlateCell
+    public class PlateCell
     {
         public Vector2Int GridPos => _gridPos;
         private Vector2Int _gridPos;

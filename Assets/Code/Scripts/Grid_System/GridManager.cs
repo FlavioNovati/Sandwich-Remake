@@ -1,8 +1,5 @@
 using UnityEngine;
 
-using Input_System;
-using Input_System.Extentions;
-
 namespace Grid_System
 {
     public class GridManager : MonoBehaviour
@@ -47,7 +44,7 @@ namespace Grid_System
             
             return new Vector2Int(x, y);
         }
-
+        s
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

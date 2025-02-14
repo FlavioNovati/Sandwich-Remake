@@ -23,16 +23,22 @@ namespace Grid_System
             _size = new Vector2Int(width, height);
         }
 
-        public PlateCell GetNeighbour(Vector2Int location, SwipeDirection direction)
+        public PlateCell GetNeighbour(Vector2Int coordinate, SwipeDirection direction)
         {
             Vector2Int directionV2 = direction.ToVector2Int();
-            Vector2Int newLocation = location + directionV2;
+            Vector2Int neighbourCoordinate = coordinate + directionV2;
 
-            if(newLocation.x  < _size.x && newLocation.y < _size.y)
-                return _plateCells[newLocation.x, newLocation.y];
+            //Out of matrix case
+            if(neighbourCoordinate.x < 0 || neighbourCoordinate.y < 0)
+                return null;
+            
+            if (neighbourCoordinate.x < _size.x && neighbourCoordinate.y < _size.y)
+                return _plateCells[neighbourCoordinate.x, neighbourCoordinate.y];
 
-            return new PlateCell(-1, -1);
+            return null;
         }
+
+        public PlateCell GetCell(Vector2Int coordinate) => _plateCells[coordinate.x, coordinate.y];
 
         public override string ToString()
         {

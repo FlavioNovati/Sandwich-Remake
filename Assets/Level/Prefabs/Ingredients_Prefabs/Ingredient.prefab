@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isBread: 0
+  _name: 
+  _extends: {x: 1, y: 0.1, z: 1}
 --- !u!65 &3470841378689074764
 BoxCollider:
   m_ObjectHideFlags: 0

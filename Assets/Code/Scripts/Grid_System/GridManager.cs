@@ -67,6 +67,20 @@ namespace Grid_System
             return new Vector3(x, 0f, z);
         }
 
+        public int GetCellWithIngredientCount()
+        {
+            int amount = 0;
+
+            //Check if cell contains an Ingredient
+            foreach(PlateCell cell in _plateGrid.Cells)
+            {
+                if(cell.Ingredients.Count >= 1)
+                    amount++;
+            }
+
+            return amount;
+        }
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

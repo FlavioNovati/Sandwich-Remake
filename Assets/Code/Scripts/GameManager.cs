@@ -5,6 +5,7 @@ using Grid_System;
 using Input_System;
 using Record_System;
 using UnityEngine.UI;
+using Ingredient_System;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,7 +33,9 @@ public class GameManager : MonoBehaviour
         _inputHandler.OnSwipeCallback += Swipe;
 
         //Connect GridManager Controller Callback to recordController
-        _gridManager.Controller.OnPlateCellMovedCallback += _recordController.AddEntry;
+        _gridManager.Controller.OnPlateCellBeforeMove += _recordController.AddEntry;
+        //Connect to grid manager after move to check grid cell
+        _gridManager.Controller.OnPlateCellAfterMove += CheckCell;
 
         //Get Main Camera
         _cameraRef = Camera.main;
@@ -41,7 +44,8 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         _inputHandler.OnSwipeCallback -= Swipe;
-        _gridManager.Controller.OnPlateCellMovedCallback -= _recordController.AddEntry;
+        _gridManager.Controller.OnPlateCellBeforeMove -= _recordController.AddEntry;
+        _gridManager.Controller.OnPlateCellAfterMove -= CheckCell;
     }
 
     private void GetTouchPosition(Vector2 touchPos)
@@ -65,9 +69,47 @@ public class GameManager : MonoBehaviour
     {
         //Move Ingredients
         _gridManager.Controller.MoveCell(_selectedCell, swipeDirection);
+    }
 
-        //TODO: add Constraints -> WARNING -> Go back from one
-        //Bread on bread
+    private void CheckCell(PlateCell cell, SwipeDirection swipeDirection)
+    {
+        Ingredient firstIngredient = cell.Ingredients[0];
+        Ingredient lastIngredient = cell.Ingredients[^1];
+
+        //Completed Sandwich
+        if (_gridManager.GetCellWithIngredientCount() == 1)
+        {
+            //Check if sandwich is valid
+            if(firstIngredient.IsBread && lastIngredient.IsBread)
+            {
+                //Win case
+                Debug.Log("Win");
+                return;
+            }
+            else
+            {
+                //Nuh uh
+                Debug.Log("YOU CANNOT DO THAT");
+                UndoMove();
+                return;
+            }
+        }
+        //Sandwich is not completed yet
+        else
+        {
+            if (lastIngredient.IsBread && !firstIngredient.IsBread)
+            {
+                Debug.Log("YOU CANNOT DO THAT - First ingredient must be bread");
+                UndoMove();
+                return;
+            }
+            //Bread on Bread
+            if (firstIngredient.IsBread && lastIngredient.IsBread)
+            {
+                Debug.Log("USE ALL INGREDIENTS");
+                UndoMove();
+            }
+        }
     }
 
     private void UndoMove()

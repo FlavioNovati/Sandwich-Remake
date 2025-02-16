@@ -12,9 +12,11 @@ namespace Grid_System
     public class PlateGridController
     {
         public delegate void PlateCallback(PlateCell cell, SwipeDirection direction);
-        public event PlateCallback OnPlateCellMovedCallback;
+        public event PlateCallback OnPlateCellBeforeMove;
+        public event PlateCallback OnPlateCellAfterMove;
 
         private PlateGrid _plateGrid;
+
         public PlateGridController(PlateGrid plateGrid)
         {
             _plateGrid = plateGrid;
@@ -38,11 +40,14 @@ namespace Grid_System
             List<Ingredient> ingredientsToMove = new List<Ingredient>(fromCell.Ingredients.Count);
             ingredientsToMove.AddRange(fromCell.Ingredients);
 
-            //Call invoke methods (Called before to avoid referce type value change)
-            OnPlateCellMovedCallback?.Invoke(fromCell, swipeDirection);
+            //Invoke before move callback
+            OnPlateCellBeforeMove?.Invoke(fromCell, swipeDirection);
 
             //Move Ingredients
             MoveIngredients(ingredientsToMove, fromCell, toCell, swipeDirection);
+
+            //Invoke after move callback
+            OnPlateCellAfterMove?.Invoke(toCell, swipeDirection);
         }
 
         public void UndoMovement(List<Ingredient> ingredients, Vector2Int coordinate, SwipeDirection swipeDirection)

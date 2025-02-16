@@ -1,5 +1,3 @@
-using Input_System;
-using Input_System.Extentions;
 using UnityEngine;
 
 namespace Grid_System
@@ -23,10 +21,9 @@ namespace Grid_System
             _size = new Vector2Int(width, height);
         }
 
-        public PlateCell GetNeighbour(Vector2Int coordinate, SwipeDirection direction)
+        public PlateCell GetNeighbour(Vector2Int coordinate, Vector2Int direction)
         {
-            Vector2Int directionV2 = direction.ToVector2Int();
-            Vector2Int neighbourCoordinate = coordinate + directionV2;
+            Vector2Int neighbourCoordinate = coordinate + direction;
 
             //Out of matrix case
             if(neighbourCoordinate.x < 0 || neighbourCoordinate.y < 0)

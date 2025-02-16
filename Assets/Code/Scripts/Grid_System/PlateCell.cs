@@ -1,11 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+using Ingredient_System;
+
 namespace Grid_System
 {
     public class PlateCell
     {
-        public Vector2Int GridPos => _gridPos;
+        public Vector3 GlobalPosition
+        {
+            get => _globalPos;
+            set => _globalPos = value;
+        }
+        private Vector3 _globalPos;
+
+        public Vector2Int GridPosition => _gridPos;
         private Vector2Int _gridPos;
         
         public List<Ingredient> Ingredients
@@ -15,16 +24,33 @@ namespace Grid_System
         }
         private List<Ingredient> _ingredients;
 
+
         public PlateCell(int x, int y)
         {
+            _globalPos = Vector3.zero;
             _gridPos = new Vector2Int(x, y);
             _ingredients = new List<Ingredient>();
+        }
+
+        public float GetLastIngredientHeight()
+        {
+            float maxHeight = _globalPos.y;
+
+            if (_ingredients.Count >= 1)
+            {
+                //Get last ingredient position
+                maxHeight = _ingredients[^1].transform.position.y;
+                //offset by last ingredient height
+                maxHeight += _ingredients[^1].Height / 2f;
+            }
+
+            return maxHeight;
         }
 
         public override string ToString()
         {
             string value = string.Empty;
-            value += $"Position: {GridPos}\n";
+            value += $"Position: {GridPosition}\n";
 
             value += $"Ingredients:\n";
             foreach (Ingredient ingredient in _ingredients)

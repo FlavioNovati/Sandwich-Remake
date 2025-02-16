@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Grid_System;
 using Input_System;
+using Ingredient_System;
 
 namespace Record_System
 {
@@ -19,7 +20,7 @@ namespace Record_System
 
         public RecordEntry(PlateCell plateCell, SwipeDirection swipeDirection)
         {
-            _positionInGrid = plateCell.GridPos;
+            _positionInGrid = plateCell.GridPosition;
 
             _ingredients = new List<Ingredient>();
             _ingredients.AddRange(plateCell.Ingredients);

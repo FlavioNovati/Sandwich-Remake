@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using Ingredient_System;
+
 namespace Grid_System
 {
     public class GridManager : MonoBehaviour
@@ -18,6 +20,10 @@ namespace Grid_System
             //Initialize Parameters
             _plateGrid = new PlateGrid(_plateGridSize.x, _plateGridSize.y);
             _gridController = new PlateGridController(_plateGrid);
+
+            //Assign global position to cell
+            foreach(PlateCell cell in _plateGrid.Cells)
+                cell.GlobalPosition = GridToGlobal(cell.GridPosition);
         }
 
         private void Start()
@@ -44,7 +50,23 @@ namespace Grid_System
             
             return new Vector2Int(x, y);
         }
-        
+
+        public Vector3 GridToGlobal(Vector2Int gridPos)
+        {
+            float x = gridPos.x;
+            float z = gridPos.y;
+
+            //Convert to global according to cell size
+            x *= _cellSize;
+            z *= _cellSize;
+
+            //Apply offset
+            x += _cellSize / 2f;
+            z += _cellSize / 2f;
+
+            return new Vector3(x, 0f, z);
+        }
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

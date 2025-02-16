@@ -18,11 +18,14 @@ public class GameManager : MonoBehaviour
     private Camera _cameraRef;
 
     [SerializeField] private Button back;
+    [SerializeField] private Button backAll;
 
     private void Awake()
     {
         _recordController = new RecordController();
+
         back.onClick.AddListener(UndoMove);
+        backAll.onClick.AddListener(UndoAll);
     }
 
     private void Start()
@@ -119,5 +122,17 @@ public class GameManager : MonoBehaviour
 
         RecordEntry recordEntry = _recordController.RecordStack.Pop();
         _gridManager.Controller.UndoMovement(recordEntry.Ingredients, recordEntry.PositionInGrid, recordEntry.SwipeDirection);
+    }
+
+    private void UndoAll()
+    {
+        if (_recordController.RecordStack.Count <= 0)
+            return;
+
+        while(_recordController.RecordStack.Count > 0)
+        {
+            RecordEntry recordEntry = _recordController.RecordStack.Pop();
+            _gridManager.Controller.UndoMovement(recordEntry.Ingredients, recordEntry.PositionInGrid, recordEntry.SwipeDirection);
+        }
     }
 }

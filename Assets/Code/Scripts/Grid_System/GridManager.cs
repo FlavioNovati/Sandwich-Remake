@@ -11,7 +11,7 @@ namespace Grid_System
 
         public PlateGrid PlateGrid => _plateGrid;
         private PlateGrid _plateGrid;
-
+        
         public PlateGridController Controller => _gridController;
         private PlateGridController _gridController;
 
@@ -85,7 +85,7 @@ namespace Grid_System
         private void OnDrawGizmos()
         {
             //Adjust Color
-            Gizmos.color = Color.white;
+            Gizmos.color = Color.black;
             //Get Values
             Vector3 cellSize = new Vector3(_cellSize, 0f, _cellSize);
             Vector3 cellOffset = cellSize / 2;

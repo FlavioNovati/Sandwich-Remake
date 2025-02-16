@@ -69,7 +69,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 64
+    maxTextureSize: 128
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 0
@@ -110,11 +110,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI_Restart
+      name: UI_Elements_Restart
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -132,11 +132,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Reload
+      name: UI_Elements_Undo
       rect:
         serializedVersion: 2
         x: 32
-        y: 0
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -149,6 +149,72 @@ TextureImporter:
       bones: []
       spriteID: e621b111a4514b64e9a9357418f86f20
       internalID: 2137138059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Elements_Warning
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 789ac0620774c0f4abc0505aed4db970
+      internalID: -533073073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Elements_Play
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a67fb52bde980fc489ad3257c77119b3
+      internalID: 1844837731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Elements_Background
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 12, y: 12, z: 12, w: 12}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7f0916d41d98ba4aaebb8faeb359557
+      internalID: 1233043914
       vertices: []
       indices: 
       edges: []
@@ -167,8 +233,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      UI_Reload: 2137138059
-      UI_Restart: 1698683039
+      UI_Elements_Background: 1233043914
+      UI_Elements_Play: 1844837731
+      UI_Elements_Restart: 1698683039
+      UI_Elements_Undo: 2137138059
+      UI_Elements_Warning: -533073073
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

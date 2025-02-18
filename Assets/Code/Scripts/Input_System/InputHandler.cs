@@ -49,6 +49,7 @@ namespace Input_System
 
             //Update Touch Position
             _touchPos = Input.GetTouch(0).position;
+            
             //Invoke Callback
             OnTouchDownCallback?.Invoke(_touchPos);
 

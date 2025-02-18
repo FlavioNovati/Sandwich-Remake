@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d27f39303c2beda4f9acc127893dd854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _swipeDeadZone: 6
+  _swipeDeadZone: 1.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

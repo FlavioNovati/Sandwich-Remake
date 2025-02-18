@@ -148,6 +148,7 @@ namespace GameManagement_System.Behaviour
             //Sandwich is not completed yet
             else
             {
+                //Sandwich is not ready -> first ingredient not a bread
                 if (lastIngredient.IsBread && !firstIngredient.IsBread)
                 {
                     OnGameplayMessage?.Invoke("YOU CANNOT DO THAT! - First ingredient must be bread", Color.red);

@@ -38,8 +38,8 @@
                 },
                 {
                     "name": "2D Vector",
-                    "id": "5902df54-f945-4eb5-80f1-9b6232b32ba3",
-                    "path": "2DVector",
+                    "id": "60830004-d2a4-4e30-b960-b8cfb11bf370",
+                    "path": "2DVector(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -49,7 +49,7 @@
                 },
                 {
                     "name": "up",
-                    "id": "39754ab1-1321-4f77-a6bb-f23b6335922c",
+                    "id": "5f7c19a3-228b-444d-81ff-24c4dd6f419e",
                     "path": "<Touchscreen>/delta/up",
                     "interactions": "",
                     "processors": "",
@@ -60,7 +60,7 @@
                 },
                 {
                     "name": "down",
-                    "id": "bf775a7e-23b1-46c5-9eb0-65c7c3b86858",
+                    "id": "77c419f6-b673-4910-933e-2309bf6b65e3",
                     "path": "<Touchscreen>/delta/down",
                     "interactions": "",
                     "processors": "",
@@ -71,7 +71,7 @@
                 },
                 {
                     "name": "left",
-                    "id": "3ac735d8-cb78-4983-9b72-9554025f9a75",
+                    "id": "c332f82c-68c6-4fa7-b3ed-5e7d393b2aff",
                     "path": "<Touchscreen>/delta/left",
                     "interactions": "",
                     "processors": "",
@@ -82,7 +82,7 @@
                 },
                 {
                     "name": "right",
-                    "id": "378e5086-3ee0-4cc8-a15d-622cb9619dbe",
+                    "id": "30afa02a-20be-4a57-9329-7491d1e89504",
                     "path": "<Touchscreen>/delta/right",
                     "interactions": "",
                     "processors": "",

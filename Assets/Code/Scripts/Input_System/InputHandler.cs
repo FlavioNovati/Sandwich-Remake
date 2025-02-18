@@ -70,6 +70,8 @@ namespace Input_System
             //Increment Swipe delta
             _swipeDelta += obj.ReadValue<Vector2>();
 
+            Debug.Log(_swipeDelta);
+
             //Update touch pos
             _touchPos = Input.GetTouch(0).position;
 

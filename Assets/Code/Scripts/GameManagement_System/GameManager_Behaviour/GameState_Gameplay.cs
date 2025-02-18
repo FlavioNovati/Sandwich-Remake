@@ -31,23 +31,24 @@ namespace GameManagement_System.Behaviour
         public override void Enter()
         {
             _recordController = new RecordController();
+
             //Get Grid Manager
             _gridManager = MonoBehaviour.FindFirstObjectByType<GridManager>();
+            //Connect GridManager Controller Callback to recordController
+            _gridManager.Controller.OnPlateCellBeforeMove += _recordController.AddEntry;
+            //Connect to grid manager after move to check grid cell
+            _gridManager.Controller.OnPlateCellAfterMove += CheckCell;
+
             //Get Input handler and connect to events
             _inputHandler = MonoBehaviour.FindFirstObjectByType<InputHandler>();
             _inputHandler.OnTouchDownCallback += GetTouchPosition;
             _inputHandler.OnSwipeCallback += Swipe;
 
             //Get UI and connect to callbacks
-            UIGameplay uiGameplay = MonoBehaviour.FindFirstObjectByType<UIGameplay>();
+            UIGameplay uiGameplay = MonoBehaviour.FindFirstObjectByType<UIGameplay>(FindObjectsInactive.Include);
             uiGameplay.OnUndoRequest += UndoMove;
             uiGameplay.OnRestartRequest += UndoAll;
             uiGameplay.OnNextLevelRequest += NextLevel;
-
-            //Connect GridManager Controller Callback to recordController
-            _gridManager.Controller.OnPlateCellBeforeMove += _recordController.AddEntry;
-            //Connect to grid manager after move to check grid cell
-            _gridManager.Controller.OnPlateCellAfterMove += CheckCell;
 
             //Get Main Camera (used for input)
             _cameraRef = Camera.main;
@@ -67,6 +68,7 @@ namespace GameManagement_System.Behaviour
             }
 
             //Unsub from input handler
+            _inputHandler.OnTouchDownCallback -= GetTouchPosition;
             _inputHandler.OnSwipeCallback -= Swipe;
 
             //Unsub from GridManager
@@ -91,7 +93,7 @@ namespace GameManagement_System.Behaviour
                 return;
             }
 
-            GameState_Loading loadScene = new GameState_Loading(sceneIndex+1, new GameState_Gameplay());
+            GameState_Loading loadScene = new GameState_Loading(sceneIndex + 1, new GameState_Gameplay());
             GameState_Loading unloadCurrentScene = new GameState_Loading(sceneIndex, loadScene, unloadCurrent);
             base.OnExitState(unloadCurrentScene);
         }

@@ -44,6 +44,15 @@ namespace GameManagement_System.Behaviour
                 _loadingAsyncOperation.completed -= OperationEnded;
         }
 
-        private void OperationEnded(AsyncOperation asyncOperation) => base.OnExitState(_nextState);
+        private void OperationEnded(AsyncOperation asyncOperation)
+        {
+            if(!_unload)
+            {   
+                Scene gameScene = SceneManager.GetSceneByBuildIndex(_sceneToLoad);
+                SceneManager.SetActiveScene(gameScene);
+            }
+
+            base.OnExitState(_nextState);
+        }
     }
 }

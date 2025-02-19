@@ -1,56 +1,60 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using UI_System;
 using Grid_System;
 using Input_System;
 using Record_System;
 using Ingredient_System;
-using UnityEngine.SceneManagement;
+using GameManagement_System.Data;
 
 namespace GameManagement_System.Behaviour
 {
-    public class GameState_Gameplay : GameState
+    public class GameState_Gameplay : GameManager_State
     {
+        //Gameplay State Static Callback
         public delegate void GameplayMessageCallback(string message, Color color);
         public static event GameplayMessageCallback OnGameplayMessage;
-
+        
         public delegate void GameEvents();
         public static GameEvents OnGameWon;
 
+        //Reference to Gameplay Objects
+        private Camera _cameraRef;
         private GridManager _gridManager;
         private InputHandler _inputHandler;
 
+        //Game State private Variables
+        private Vector2Int _selectedCellCoordinate;
         private RecordController _recordController;
 
-        private Vector2Int _selectedCell;
-        private Camera _cameraRef;
-
-        public override Data.GameState GameState_Type => Data.GameState.GAMEPLAY;
+        public override GameState GameState => GameState.GAMEPLAY;
 
         public override void Enter()
         {
+            //Get Record Controller
             _recordController = new RecordController();
 
             //Get Grid Manager
             _gridManager = MonoBehaviour.FindFirstObjectByType<GridManager>();
-            //Connect GridManager Controller Callback to recordController
+            //Connect GridManager Controller Callback to recordController to track player actions
             _gridManager.Controller.OnPlateCellBeforeMove += _recordController.AddEntry;
             //Connect to grid manager after move to check grid cell
             _gridManager.Controller.OnPlateCellAfterMove += CheckCell;
 
-            //Get Input handler and connect to events
+            //Get Input handler and connect to callbacks
             _inputHandler = MonoBehaviour.FindFirstObjectByType<InputHandler>();
             _inputHandler.OnTouchDownCallback += GetTouchPosition;
             _inputHandler.OnSwipeCallback += Swipe;
 
-            //Get UI and connect to callbacks
+            //Get Gameplay Section of the UI and subscribe to callbacks
             UIGameplay uiGameplay = MonoBehaviour.FindFirstObjectByType<UIGameplay>(FindObjectsInactive.Include);
             uiGameplay.OnUndoRequest += UndoMove;
             uiGameplay.OnRestartRequest += UndoAll;
             uiGameplay.OnNextLevelRequest += NextLevel;
 
-            //Get Main Camera (used for input)
+            //Get Main Camera reference (used for input)
             _cameraRef = Camera.main;
         }
 
@@ -58,43 +62,48 @@ namespace GameManagement_System.Behaviour
 
         public override void Exit()
         {
-            //Get UI and disconnect to callbacks
-            UIGameplay uiGameplay = MonoBehaviour.FindFirstObjectByType<UIGameplay>();
-            if(uiGameplay != null)
-            {
-                uiGameplay.OnUndoRequest -= UndoMove;
-                uiGameplay.OnRestartRequest -= UndoAll;
-                uiGameplay.OnNextLevelRequest -= NextLevel;
-            }
+            //Unsub from GridManager
+            _gridManager.Controller.OnPlateCellBeforeMove -= _recordController.AddEntry;
+            _gridManager.Controller.OnPlateCellAfterMove -= CheckCell;
 
             //Unsub from input handler
             _inputHandler.OnTouchDownCallback -= GetTouchPosition;
             _inputHandler.OnSwipeCallback -= Swipe;
 
-            //Unsub from GridManager
-            _gridManager.Controller.OnPlateCellBeforeMove -= _recordController.AddEntry;
-            _gridManager.Controller.OnPlateCellAfterMove -= CheckCell;
+            //Get Gameplay Section of the UI and unsubscribe to callbacks
+            UIGameplay uiGameplay = MonoBehaviour.FindFirstObjectByType<UIGameplay>();
+            if (uiGameplay != null)
+            {
+                uiGameplay.OnUndoRequest -= UndoMove;
+                uiGameplay.OnRestartRequest -= UndoAll;
+                uiGameplay.OnNextLevelRequest -= NextLevel;
+            }
         }
         
         private void NextLevel()
         {
+            //Get current Active Scene
             Scene currentScene = SceneManager.GetActiveScene();
-            int sceneIndex = currentScene.buildIndex;
-            bool unloadCurrent = sceneIndex >= 1;
-
+            int currentSceneIndex = currentScene.buildIndex;
+            //Don't Unload scene 0 (is management scene)
+            bool unloadCurrent = currentSceneIndex >= 1;
+            
             Scene sceneToLoad;
             try
             {
-                sceneToLoad = SceneManager.GetSceneByBuildIndex(sceneIndex+1);
+                //Try get next scene in build inxed
+                sceneToLoad = SceneManager.GetSceneByBuildIndex(currentSceneIndex+1);
             }
             catch(Exception)
             {
+                //Next scene does not exists -> Notify the player
                 OnGameplayMessage?.Invoke("ALL LEVEL COMPLETED", Color.magenta);
                 return;
             }
-
-            GameState_Loading loadScene = new GameState_Loading(sceneIndex + 1, new GameState_Gameplay());
-            GameState_Loading unloadCurrentScene = new GameState_Loading(sceneIndex, loadScene, unloadCurrent);
+            
+            //Next Scene is found -> Unload Current -> Load Next
+            GameState_Loading loadScene = new GameState_Loading(currentSceneIndex + 1, new GameState_Gameplay());
+            GameState_Loading unloadCurrentScene = new GameState_Loading(currentSceneIndex, loadScene, unloadCurrent);
             base.OnExitState(unloadCurrentScene);
         }
 
@@ -111,14 +120,14 @@ namespace GameManagement_System.Behaviour
             if (Physics.Raycast(ray, out RaycastHit hitInfo, 60f, 1 << 6))
             {
                 //Get grid cell position
-                _selectedCell = _gridManager.GlobalToGrid(hitInfo.collider.transform.position);
+                _selectedCellCoordinate = _gridManager.GlobalToGrid(hitInfo.collider.transform.position);
             }
         }
 
         private void Swipe(SwipeDirection swipeDirection)
         {
             //Move Ingredients
-            _gridManager.Controller.MoveCell(_selectedCell, swipeDirection);
+            _gridManager.Controller.MoveCell(_selectedCellCoordinate, swipeDirection);
         }
 
         private void CheckCell(PlateCell cell, SwipeDirection swipeDirection)

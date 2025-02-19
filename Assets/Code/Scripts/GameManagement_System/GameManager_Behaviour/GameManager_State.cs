@@ -2,11 +2,12 @@ using System;
 
 namespace GameManagement_System.Behaviour
 {
-    public abstract class GameState
+    //Base GameManager Behaviour
+    public abstract class GameManager_State
     {
-        public Action<GameState> OnExitState;
+        public Action<GameManager_State> OnExitState;
 
-        public abstract Data.GameState GameState_Type { get; }
+        public abstract Data.GameState GameState { get; }
 
         public abstract void Enter();
         public abstract void Update();

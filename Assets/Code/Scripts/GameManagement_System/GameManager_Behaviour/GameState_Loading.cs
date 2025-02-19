@@ -3,19 +3,19 @@ using UnityEngine.SceneManagement;
 
 namespace GameManagement_System.Behaviour
 {
-    public class GameState_Loading : GameState
+    public class GameState_Loading : GameManager_State
     {
         public delegate void GameEvents(float loadingProgress);
         public static GameEvents OnLoadingProgress;
 
         private AsyncOperation _loadingAsyncOperation;
-        private GameState _nextState;
+        private GameManager_State _nextState;
 
-        public override Data.GameState GameState_Type => Data.GameState.LOAD;
+        public override Data.GameState GameState => Data.GameState.LOAD;
         private int _sceneToLoad;
         private bool _unload;
 
-        public GameState_Loading(int sceneToLoad, GameState nextState, bool unload = false)
+        public GameState_Loading(int sceneToLoad, GameManager_State nextState, bool unload = false)
         {
             _nextState = nextState;
             _sceneToLoad = sceneToLoad;

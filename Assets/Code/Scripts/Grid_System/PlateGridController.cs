@@ -1,14 +1,14 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 using Input_System;
 using Input_System.Extentions;
-
 using Ingredient_System;
 
 namespace Grid_System
 {
+    //The scope of this class is to allow plate grid edit, such as move cell and undo movement
     public class PlateGridController
     {
         public delegate void PlateCallback(PlateCell cell, SwipeDirection direction);

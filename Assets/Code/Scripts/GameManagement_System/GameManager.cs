@@ -4,7 +4,8 @@ using GameManagement_System.Behaviour;
 
 namespace GameManagement_System
 {
-    //GameManager is a simple state machine (the project does not requires more than that)
+    //GameManager is a simple state machine
+    //The project's Scope does not requires more than that from this Class and it's too small to have a StateMachine
     public class GameManager : MonoBehaviour
     {
         //Callbacks

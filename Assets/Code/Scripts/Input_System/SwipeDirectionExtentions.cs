@@ -4,6 +4,7 @@ namespace Input_System.Extentions
 {
     public static class SwipeDirectionExtentions
     {
+        //Convert swipe direction to Vector2Int
         public static Vector2Int ToVector2Int(this SwipeDirection swipeDirection)
         {
             switch(swipeDirection)
@@ -21,6 +22,7 @@ namespace Input_System.Extentions
             }
         }
 
+        //Convert swipe direction to Vector3
         public static Vector3 ToVector3(this SwipeDirection swipeDirection)
         {
             switch (swipeDirection)
@@ -38,6 +40,7 @@ namespace Input_System.Extentions
             }
         }
 
+        //Reverse swipe direction
         public static SwipeDirection Reverse(this SwipeDirection swipeDirection)
         {
             switch (swipeDirection)
@@ -55,6 +58,7 @@ namespace Input_System.Extentions
             }
         }
 
+        //Convert Vector2 to swipe direction
         public static SwipeDirection ToSwipeDirection(this Vector2 direction)
         {
             switch (direction.x)

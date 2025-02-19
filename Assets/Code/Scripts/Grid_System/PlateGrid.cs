@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Grid_System
 {
+    //This class represent a grid containing PlateCells
     public class PlateGrid
     {
         public PlateCell[,] Cells => _plateCells;
@@ -23,15 +24,18 @@ namespace Grid_System
 
         public PlateCell GetNeighbour(Vector2Int coordinate, Vector2Int direction)
         {
+            //Get Neighbour Coordinate
             Vector2Int neighbourCoordinate = coordinate + direction;
 
             //Out of matrix case
             if(neighbourCoordinate.x < 0 || neighbourCoordinate.y < 0)
                 return null;
             
+            //Check if coordinate don't overshoots the matrix size
             if (neighbourCoordinate.x < _size.x && neighbourCoordinate.y < _size.y)
                 return _plateCells[neighbourCoordinate.x, neighbourCoordinate.y];
 
+            //No neighbour are found
             return null;
         }
 

@@ -4,14 +4,18 @@ using Ingredient_System;
 
 namespace Grid_System
 {
+    //This class is used to create a PlateGrid and a Plate Grid Controller
     public class GridManager : MonoBehaviour
     {
+        //Private Manager variables
         [SerializeField, Min(1)] private Vector2Int _plateGridSize = Vector2Int.one * 4;
         [SerializeField, Min(0)] private float _cellSize = 1;
 
+        //Plate Grid Attributes
         public PlateGrid PlateGrid => _plateGrid;
         private PlateGrid _plateGrid;
         
+        //Plate Grid Attributes
         public PlateGridController Controller => _gridController;
         private PlateGridController _gridController;
 
@@ -21,7 +25,7 @@ namespace Grid_System
             _plateGrid = new PlateGrid(_plateGridSize.x, _plateGridSize.y);
             _gridController = new PlateGridController(_plateGrid);
 
-            //Assign global position to cell
+            //Assign global position to cells
             foreach(PlateCell cell in _plateGrid.Cells)
                 cell.GlobalPosition = GridToGlobal(cell.GridPosition);
         }
@@ -67,14 +71,18 @@ namespace Grid_System
             return new Vector3(x, 0f, z);
         }
 
+        /// <summary>
+        /// Return the amount of cells with ingrediens on it
+        /// </summary>
+        /// <returns></returns>
         public int GetCellWithIngredientCount()
         {
             int amount = 0;
-
-            //Check if cell contains an Ingredient
+            
             foreach(PlateCell cell in _plateGrid.Cells)
             {
-                if(cell.Ingredients.Count >= 1)
+                //Check if cell contains at least one Ingredient
+                if (cell.Ingredients.Count >= 1)
                     amount++;
             }
 

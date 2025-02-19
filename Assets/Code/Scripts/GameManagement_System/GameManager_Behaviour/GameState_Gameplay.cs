@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +10,8 @@ using GameManagement_System.Data;
 
 namespace GameManagement_System.Behaviour
 {
+    //This State contains the gameplay logic (respond to Input data and edit the GridManager's controller data)
+    //The gameplay logic is in a game manager state because the project is very simple like it's scope
     public class GameState_Gameplay : GameManager_State
     {
         //Gameplay State Static Callback
@@ -72,6 +73,7 @@ namespace GameManagement_System.Behaviour
 
             //Get Gameplay Section of the UI and unsubscribe to callbacks
             UIGameplay uiGameplay = MonoBehaviour.FindFirstObjectByType<UIGameplay>();
+            //Check if uiGameplay Exist -> can be already destroyed when exiting application
             if (uiGameplay != null)
             {
                 uiGameplay.OnUndoRequest -= UndoMove;
@@ -84,23 +86,23 @@ namespace GameManagement_System.Behaviour
         {
             //Get current Active Scene
             Scene currentScene = SceneManager.GetActiveScene();
+            //Get scene Index
             int currentSceneIndex = currentScene.buildIndex;
-            //Don't Unload scene 0 (is management scene)
-            bool unloadCurrent = currentSceneIndex >= 1;
             
-            Scene sceneToLoad;
-            try
-            {
-                //Try get next scene in build inxed
-                sceneToLoad = SceneManager.GetSceneByBuildIndex(currentSceneIndex+1);
-            }
-            catch(Exception)
+            if(currentSceneIndex+1 >= SceneManager.sceneCountInBuildSettings)
             {
                 //Next scene does not exists -> Notify the player
                 OnGameplayMessage?.Invoke("ALL LEVEL COMPLETED", Color.magenta);
                 return;
             }
-            
+
+            //Get Scene To Load
+            Scene sceneToLoad;
+            sceneToLoad = SceneManager.GetSceneByBuildIndex(currentSceneIndex+1);
+
+            //Don't Unload scene 0 (is management scene)
+            bool unloadCurrent = currentSceneIndex >= 1;
+
             //Next Scene is found -> Unload Current -> Load Next
             GameState_Loading loadScene = new GameState_Loading(currentSceneIndex + 1, new GameState_Gameplay());
             GameState_Loading unloadCurrentScene = new GameState_Loading(currentSceneIndex, loadScene, unloadCurrent);
@@ -132,6 +134,7 @@ namespace GameManagement_System.Behaviour
 
         private void CheckCell(PlateCell cell, SwipeDirection swipeDirection)
         {
+            //Get First and Last Ingredient
             Ingredient firstIngredient = cell.Ingredients[0];
             Ingredient lastIngredient = cell.Ingredients[^1];
 
@@ -148,7 +151,7 @@ namespace GameManagement_System.Behaviour
                 }
                 else
                 {
-                    //Nuh uh
+                    //This case is not possible unless only one bread is in scene
                     OnGameplayMessage?.Invoke("YOU CANNOT DO THAT!", Color.red);
                     UndoMove();
                     return;
@@ -176,18 +179,23 @@ namespace GameManagement_System.Behaviour
 
         private void UndoMove()
         {
+            //Check if there are some move to undo
             if (_recordController.RecordStack.Count <= 0)
                 return;
 
+            //Get last record entry
             RecordEntry recordEntry = _recordController.RecordStack.Pop();
+            //Undo Movement with record entry
             _gridManager.Controller.UndoMovement(recordEntry.Ingredients, recordEntry.PositionInGrid, recordEntry.SwipeDirection);
         }
 
         private void UndoAll()
         {
+            //Check if there are some move to undo
             if (_recordController.RecordStack.Count <= 0)
                 return;
 
+            //Undo while RecordController have Data
             while (_recordController.RecordStack.Count > 0)
             {
                 RecordEntry recordEntry = _recordController.RecordStack.Pop();

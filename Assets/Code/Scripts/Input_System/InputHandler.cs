@@ -5,24 +5,29 @@ using Input_System.Extentions;
 
 namespace Input_System
 {
+    //This class is used to adapt the Unity Input System to the project necessity (swipe, and touch position)
+    //Is not a pure class to separate SwipeDeadZone from the other classes while allowing an easy edit via editor
     public class InputHandler : MonoBehaviour
     {
+        //Public Callback for touch
         public delegate void HandlerCallback(Vector2 touchPos);
         public event HandlerCallback OnTouchDownCallback;
         public event HandlerCallback OnTouchUpCallback;
 
+        //Public Callback for Swipe
         public delegate void HandlerSwipeCallback(SwipeDirection swipeDirection);
         public event HandlerSwipeCallback OnSwipeCallback;
         
+        //Private variables
+        [SerializeField, Tooltip("Minimun swipe delta to be considered a swipe")] private float _swipeDeadZone = 3f;
 
         private Player_InputActions _playerInput;
         private Vector2 _swipeDelta;
         private Vector2 _touchPos;
-    
-        [SerializeField, Tooltip("Minimun swipe delta to be considered a swipe")] private float _swipeDeadZone = 3f;
         
         private void Awake()
         {
+            //Set Values
             _swipeDelta = Vector2.zero;
             _touchPos = Vector2.zero;
             //Input
@@ -34,9 +39,10 @@ namespace Input_System
 
         private void OnDestroy()
         {
+            //Diable input Action
             _playerInput.Disable();
 
-            //Disconnect callbacks
+            //Disconnect callbacks from everything
             OnTouchDownCallback -= OnTouchDownCallback;
             OnTouchUpCallback -= OnTouchUpCallback;
             OnSwipeCallback -= OnSwipeCallback;
@@ -71,12 +77,10 @@ namespace Input_System
             //Increment Swipe delta
             _swipeDelta += obj.ReadValue<Vector2>();
 
-            Debug.Log(_swipeDelta);
-
             //Update touch pos
             _touchPos = Input.GetTouch(0).position;
 
-            //Check if swipe has surpasssed dead zone
+            //Check if swipe has surpassed dead zone
             if (_swipeDelta.magnitude >= _swipeDeadZone)
             {
                 //Arrange swipe value

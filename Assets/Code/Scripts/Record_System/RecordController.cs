@@ -1,16 +1,14 @@
-using UnityEngine;
 using System.Collections.Generic;
 
-using Input_System;
 using Grid_System;
+using Input_System;
 
 namespace Record_System
 {
+    //This class is used to store all the Record Entry into a Stack
+    //A class has been created to organize better the architecture
     public class RecordController
     {
-        public delegate void RecordControllerCallback();
-        public event RecordControllerCallback OnNewEntryCallback;
-
         public Stack<RecordEntry> RecordStack => _recordStack;
         private Stack<RecordEntry> _recordStack;
 
@@ -21,8 +19,8 @@ namespace Record_System
 
         public void AddEntry(PlateCell cell, SwipeDirection direction)
         {
+            //Add a new RecordEntry to the stack
             _recordStack.Push(new RecordEntry(cell, direction));
-            OnNewEntryCallback?.Invoke();
         }
     }
 }

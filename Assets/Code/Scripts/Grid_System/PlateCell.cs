@@ -5,6 +5,7 @@ using Ingredient_System;
 
 namespace Grid_System
 {
+    //This class represent a single cell in a plate
     public class PlateCell
     {
         public Vector3 GlobalPosition
@@ -17,6 +18,7 @@ namespace Grid_System
         public Vector2Int GridPosition => _gridPos;
         private Vector2Int _gridPos;
         
+        //Ingredients on cell
         public List<Ingredient> Ingredients
         {
             set => _ingredients = value;
@@ -36,6 +38,7 @@ namespace Grid_System
         {
             float maxHeight = _globalPos.y;
 
+            //Check if there are ingrediends on this cell
             if (_ingredients.Count >= 1)
             {
                 //Get last ingredient position

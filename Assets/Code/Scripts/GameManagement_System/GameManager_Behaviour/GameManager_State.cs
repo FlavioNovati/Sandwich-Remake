@@ -2,7 +2,7 @@ using System;
 
 namespace GameManagement_System.Behaviour
 {
-    //Base GameManager Behaviour
+    //Base GameManager state class
     public abstract class GameManager_State
     {
         public Action<GameManager_State> OnExitState;

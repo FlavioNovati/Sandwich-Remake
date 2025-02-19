@@ -31,6 +31,7 @@ namespace UI_System
 
         private void ApplySafeAreas()
         {
+            //Apply all safe areas
             SafeArea[] safeAres = GetComponentsInChildren<SafeArea>();
             foreach (SafeArea safeArea in safeAres)
                 safeArea.ApplySafeArea();
@@ -38,6 +39,7 @@ namespace UI_System
 
         private void ChangeUITab(GameManagement_System.Data.GameState state)
         {
+            //Enable the tab that can be shown
             foreach(UITab uiTab in _uiTabs)
             {
                 bool showTab = uiTab.ShowOnGameState == state;

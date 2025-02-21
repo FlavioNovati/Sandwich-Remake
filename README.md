@@ -5,7 +5,7 @@ The aim of the game is to build a sandwich by flipping ingredients on the grid, 
 The prototype must contain at least three levels.
 
 Features:
- -4x4 grid
+- 4x4 grid
 - Two slices of bread per level
 - At least two different types of ingredient
 - Touch control (swipe to flip the ingredient)
